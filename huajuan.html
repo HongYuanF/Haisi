@@ -1,0 +1,471 @@
+﻿﻿<!DOCTYPE html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,viewport-fit=cover"> -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no"> -->
+    <title>Document</title>
+    <script src="js/css3d.js"></script>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <!-- <script src="images/floor1/images/image.js"></script> -->
+        <style>
+            #main {
+                
+                width: 500px;
+                width: 500px;
+                /* touch-action: none; */
+                /* transform: rotateZ(90deg) ; */
+                
+            }
+            div{
+                touch-action: none;
+                transition: all 0s ease-out;
+                margin: 0px;
+                padding: 0px;
+            }
+            #loading{
+                background: url("./images/buttom-bg.png") no-repeat 100% 100%;
+                /* height: 100vh;
+                width: 100vw; */
+                /* left: -10%; */
+                margin:0%;
+                position: absolute;
+                background-size: cover;
+                z-index: 10;
+                /* left: -8px; */
+            }
+            .quit{
+                position: absolute;
+                right: 1.5%;
+                top: 15%;
+                width: 8%;
+                height: 10%;
+                z-index: 10;
+                /* background-color: wheat; */
+                background: url(./images/back.png) no-repeat center;
+                background-size: contain;
+                /* border-radius: 80%; */
+                visibility: hidden;
+            }
+            .music-controller{
+                position: absolute;
+                right: 0.5%;
+                top: 0%;
+                width: 10%;
+                height: 17%;
+                z-index: 10;
+                /* background-color: red; */
+                background-image: url(./images/music-button.png);
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
+		    }
+            .light{
+                -webkit-filter: drop-shadow(0 0 15px #24b5d1);
+                filter: drop-shadow(0 0 15px #24b5d1);
+                /* filter: brightness(120%); */
+            }
+        </style>
+</head>
+<body>
+    	<audio class="talk" playbackRate="2" src=""></audio>
+	    <div class="music-controller"></div>
+
+    	<audio class="bg-music" volume=0.4 src="./video/sly.mp3" loop autoplay></audio>
+        <div class="quit"></div>
+
+        <div id="main">
+        </div>
+        <script>
+            const boatYOffset = -50
+            $('.music-controller').on("click",function(){
+                console.log($(this)[0].isPlay);
+                if(typeof $(this)[0].isPlay == 'undefined'){
+                    $(this)[0].isPlay = true;
+                }
+                $(this)[0].isPlay = !$(this)[0].isPlay
+                if($(this)[0].isPlay){
+                    document.getElementsByClassName("bg-music")[0].volume = 0.2;
+                }else{
+                    document.getElementsByClassName("bg-music")[0].volume = 0;
+
+                }
+		    })
+            var clickCount = 0;
+            const panoRect = [ {w: 5662, h: 1004},
+                               {w: 5667, h: 1004},
+                               {w: 5667, h: 1004}, ];
+            const bgData = [
+            {
+                url:"./images2/floor1/images/img_",
+                length:20,
+                none:[4,16,17],
+            },{
+                url:"./images2/floor2/images/img_",
+                length:20,
+                none:[],
+            },{
+                url:"./images2/floor3/images/img_",
+                length:20,
+                none:[1,2,12,20],
+            },
+        ];
+            const new_img = [{url:"./images2/floor2/new_img/new_img_"},
+                             {url:"./images2/floor1/new_img/new_img_"},
+                             {url:"./images2/floor1/new_img/new_img_"},
+                             {url:"./images2/floor3/new_img/new_img_"}]
+            const panos = [];    
+        // 创建场景1
+            const s = new C3D.Stage();
+            function stageStart(){
+                
+                //创建一个场景
+            
+                s.size(window.innerWidth, window.innerHeight).material({
+                    // image:"./images/backgroundImg.png",
+                    color:"#F0F0E7",
+                    repeat:"no-repeat",
+                    size:"cover"
+                })
+                
+                s.update();
+                $("#main").append(s.el);
+                
+                loadImg()
+                setTimeout(()=>{
+                    start()
+                },2000)
+                // resize();
+            }
+            
+            /* //创建1个立方体放入场景 */
+            var floor = 1
+        
+        //读取图片生成画卷
+        //imgs 图片的路径 rect 原图的宽高
+            function createPano(imgs, rect) {
+                //图片的数量
+                var _len = imgs.length;
+                //每张的宽度
+                var _step = rect.w / _len;
+                //计算每张图距离摄像机的距离
+                
+                var _radius = Math.floor(_step / 2 / Math.tan(Math.PI / _len)) - 2;
+                console.log(_radius);
+                
+                // var _radius = Math.floor(Math.sqrt((_step*_step)/(1-Math.cos(2*Math.PI/_len))/2))
+                //生成画卷对象
+                var _sp = new C3D.Sprite();
+                for (var i = 0; i < imgs.length; i++) {
+                    // if(bgData[floor-1].none.includes(i+1))
+                    //     continue;
+                    //生成图片对象
+                    var _p = new C3D.Plane();
+                    //对于Y轴的旋转量 使图片一直面向镜头
+                    var _r = 360 / _len * i;
+                    //图片对应的圆心角的大小
+                    var _a = Math.PI * 2 / _len * i;
+                    //设置图片的大小 位置 旋转 材质
+                    _p.size(_step, rect.h).position(Math.sin(_a) * _radius, 0, -Math.cos(_a) * _radius).rotation(0, -_r, 0).material({
+                        image: `${imgs.url}${(i+1)<10?'0'+(i+1):(i+1)}${floor==3?".jpg":".png"}`,
+                        repeat: 'no-repeat',
+                        bothsides: false,
+                        
+                    }).update();
+                    // console.log(`${imgs.url}${(i+1)<10?'0'+(i+1):(i+1)}.png`);
+                    //添加到画卷当中
+                    _p.name(`floor_img${i+1}`)
+                    // _p.name = `floor_img${i+1}`
+                    _sp.addChild(_p);
+                }
+                floor++;
+                // //添加交互点
+                // let touchPoint = new C3D.Plane().size(50,50).position(_radius,0,0).rotation(0,-90,0).material({
+                    //     color:"#ffffff",
+                    //     repeat: 'no-repeat',
+                    //     bothsides: false,
+                    // }).update()
+                    // Jump(touchPoint);
+                    
+                    // _sp.addChild(touchPoint)
+                    //设置画卷的半径
+                    
+                    _sp.radius = _radius;
+                    //设置X轴上的最大旋转角度和旋转速度函数
+                    _sp.SetOriginPosition = function(pos){
+                        _sp.OriginPosition = pos
+                        this.z = pos
+                    }
+                    _sp.SetMaxAngelXAndSpeed = function(angle,speed){
+                        this.MAX_OFFSET_X = angle;
+                        this.ROTATE_SPEED = speed;
+                    }
+                    _sp.SetTransitionDuration = function(time){
+                        this.transitionDuration = time
+                        this.el.style.transitionDuration = time+'s'
+                    }
+                //画卷的旋转函数
+                _sp.TouchTotate = function(touch,lastTouch){
+                    //计算两个指针的位置差
+                    let x = touch.pageX - lastTouch.pageX
+                    let y = touch.pageY - lastTouch.pageY
+                    //在Y轴上旋转水平方向上的移动差
+                    let angleX = x*this.ROTATE_SPEED
+                    //在X轴上旋转垂直方向上的移动差 
+                    let angleY = y*0.05
+                    if(this.rotationX<0)
+                        this.rotationX = 0
+                    else{
+                        if(this.rotationX>this.MAX_OFFSET_X)
+                            this.rotationX = this.MAX_OFFSET_X
+                        else
+                            if(this.rotationX + angleY > 0 )
+                                this.rotate(angleY,0,0)
+                    }
+                    
+                    // console.log(this.rotationX);
+                    //旋转是整体向里移动部分距离 设置最远距离为原始位置以外300
+                    if(Math.abs(this.z - this.OriginPosition) < this.radius/2)
+                    this.move(0,0,-Math.abs(x)/3)
+                    this.rotate(0,- angleX,0)
+                    if(this.y <= this.radius/2)
+                        this.move(0,Math.abs(x/5),0)
+                    this.updateT()
+                    // console.log(this.y);
+                    //刷新整体的位置
+                }
+                //画卷恢复原始位置函数
+                _sp.ReturnOrigin = function(y){
+                    this.position(0,y,this.OriginPosition).updateT()
+                }
+                //出场函数
+                _sp.Show = function(y){
+                    let obj = this.el
+                    obj.style.transitionDuration = '2s'
+                    this.scale(1,1,1).position(0,y,this.OriginPosition).rotation(0,45,0).updateT()
+                    setTimeout(() => {
+                        this.SetTransitionDuration(this.transitionDuration)
+                    }, 2000);
+                }
+                return _sp; 
+            }
+    
+
+        
+            function loadImg(){
+                for(let i = 0;i<bgData.length;i++){
+                    setTimeout(() => {
+                        let pano = this.createPano(bgData[i],panoRect[i]);
+                        pano.scale(0.4,0.4,0.4).position(0,i==1?boatYOffset:0,-2000+-i*60).rotation(0,360 ,0).updateT();
+                        s.addChild(pano);
+                        panos.push(pano);
+                    }, i*500);
+                }
+            }
+            
+            function start(){
+                for(let i = 0;i<panos.length;i++){
+                    let pano = panos[i]
+                    // pano.scale(1,1,1).position(0,0,0).rotation(0,0 ,0).updateT();
+                    // pano.SetOriginPosition(pano.radius/4 - i*30)
+                    pano.SetOriginPosition(-i*60 + 300 )
+                    pano.SetTransitionDuration(0.5 - i*0.04);
+                    // pano.SetTransitionDuration(0.3 + i*0.05);
+                    
+                    setTimeout(() => {
+                        pano.Show(i==1?boatYOffset:0)
+                    }, 500);
+                    
+                    pano.SetMaxAngelXAndSpeed(30,0.15);
+                }
+                console.log(panos[0].floor_img5);
+                panos[0].floor_img4.addChild(new C3D.Plane().
+                                                size(50,50).
+                                                position(100,650,30).
+                                                material({image:"./images/xiushi.png",repeat: 'no-repeat',size:"contain",bothsides: false,}).
+                                                update())
+                Jump(panos[0].floor_img4.children[0])
+                panos[0].floor_img4.children[0].el.className = "light"
+                console.log(panos[0].floor_img5.children[0]);
+                panos[0].floor_img8.addChild(new C3D.Plane().
+                                                size(50,50).
+                                                position(200,500,50).
+                                                material({image:"./images/xiushi.png",repeat: 'no-repeat',size:"contain",bothsides: false,}).
+                                                update())
+                Jump( panos[0].floor_img8.children[0])
+                panos[0].floor_img8.children[0].el.className = "light"
+
+                panos[0].floor_img12.addChild(new C3D.Plane().
+                                                size(50,50).
+                                                position(300,520,30).
+                                                material({image:"./images/xiushi.png",repeat: 'no-repeat',size:"contain",bothsides: false,}).
+                                                update())
+                Jump(panos[0].floor_img12.children[0])
+                panos[0].floor_img12.children[0].el.className = "light"
+
+                panos[0].floor_img17.addChild(new C3D.Plane().
+                                                size(50,50).
+                                                position(150,700,30).
+                                                material({image:"./images/xiushi.png",repeat: 'no-repeat',size:"contain",bothsides: false,}).
+                                                update())
+                Jump(panos[0].floor_img17.children[0])
+                panos[0].floor_img17.children[0].el.className = "light"
+
+                panos[0].floor_img4.on("click",function(){
+                    $('.talk').prop('src',`./video/n_1.mp3`)
+					$('.talk')[0].play()
+                    panos[0].floor_img4.off("click");
+                    panos[0].floor_img4.removeChild(panos[0].floor_img4.children[0]);
+                    panos[1].floor_img3.material({image:`${new_img[0].url}03.png`}).updateM();
+                    panos[1].floor_img4.material({image:`${new_img[0].url}04.png`}).updateM();
+                    panos[1].floor_img5.material({image:`${new_img[0].url}05.png`}).updateM();
+                    panos[1].floor_img6.material({image:`${new_img[0].url}06.png`}).updateM();
+                    panos[1].floor_img7.material({image:`${new_img[0].url}07.png`}).updateM();
+                    clickCount++;
+                    showQuit();   
+                })                
+                panos[0].floor_img8.on("click",function(){
+                    $('.talk').prop('src',`./video/n_2.mp3`)
+					$('.talk')[0].play()
+                    panos[0].floor_img8.removeChild(panos[0].floor_img8.children[0])
+                    panos[0].floor_img8.off("click");
+                    panos[0].floor_img8.material({image:`${new_img[1].url}08.png`}).updateM();
+                    panos[0].floor_img9.material({image:`${new_img[1].url}09.png`}).updateM();
+                    clickCount++;
+                    showQuit();   
+
+                })   
+                panos[0].floor_img12.on("click",function(){
+                    $('.talk').prop('src',`./video/n_3.mp3`)
+					$('.talk')[0].play()
+                    panos[0].floor_img12.removeChild( panos[0].floor_img12.children[0])
+                    panos[0].floor_img12.off("click")
+                    panos[0].floor_img11.material({image:`${new_img[2].url}11.png`}).updateM();
+                    panos[0].floor_img12.material({image:`${new_img[2].url}12.png`}).updateM();
+                    panos[0].floor_img13.material({image:`${new_img[2].url}13.png`}).updateM();
+                    panos[0].floor_img14.material({image:`${new_img[2].url}14.png`}).updateM();
+                    panos[0].floor_img15.material({image:`${new_img[2].url}15.png`}).updateM();
+                    clickCount++;
+                    showQuit();   
+
+                }) 
+                panos[0].floor_img17.on("click",function(){
+                    $('.talk').prop('src',`./video/n_4.mp3`)
+					$('.talk')[0].play()
+                    panos[0].floor_img17.removeChild(panos[0].floor_img17.children[0])
+                    panos[0].floor_img17.off("click")
+                    panos[2].floor_img14.material({image:`${new_img[3].url}14.jpg`}).updateM();
+                    panos[2].floor_img15.material({image:`${new_img[3].url}15.jpg`}).updateM();
+                    panos[2].floor_img16.material({image:`${new_img[3].url}16.jpg`}).updateM();
+                    panos[2].floor_img17.material({image:`${new_img[3].url}17.jpg`}).updateM();
+                    panos[2].floor_img18.material({image:`${new_img[3].url}18.jpg`}).updateM();
+                    panos[2].floor_img19.material({image:`${new_img[3].url}19.jpg`}).updateM();
+                    panos[1].floor_img16.material({image:`${new_img[0].url}16.png`}).updateM();
+                    panos[1].floor_img17.material({image:`${new_img[0].url}17.png`}).updateM();
+                    panos[1].floor_img18.material({image:`${new_img[0].url}18.png`}).updateM();
+                    clickCount++;
+                    showQuit();   
+                })              
+            }
+        
+            // 响应屏幕调整尺寸
+            // function resize() {
+            //     s.size(window.innerWidth, window.innerHeight).update();
+            //     window.onresize = null
+            //     setTimeout(() => {
+            //         window.onresize = function () {
+            //             resize();
+            //         };
+            //     }, 2000);
+            // }
+        
+            // window.onresize = function () {
+            //     resize();
+            // };
+
+            function showQuit(){
+                if(clickCount == 4){
+                    $('.quit').css("visibility","visible");
+                    $('.quit').on("click",function(){
+                        $('.talk')[0].pause();
+                        window.top.stopTalk();
+                        window.top.del();
+                    })
+                }
+            }
+        
+            //记录上一次指针的位置
+            var lastTouch;
+            //恢复到原始的景深
+            var returnToOrigin;
+            $("#main").bind("touchstart",function(e){
+                // console.log("开始移动"+pano.x+' '+pano.y+' '+pano.z)
+                //重置指针的位置 否则两次点击会产生偏移
+                lastTouch = null
+                
+            })
+            
+            $("#main").bind("touchend",function(e){
+                // console.log("结束移动"+pano.x+' '+pano.y+' '+pano.z)
+                //重置指针的位置 否则两次点击会产生偏移
+                lastTouch = null
+            }) 
+            
+            $("#main").draggable = false
+            var count = 0;
+            $("#main").bind("touchmove",function(e){
+                e.preventDefault()
+                count++;
+                if(count<=6)
+                    return;
+                //如果有两个点击处 则不进行任何操作
+                if(e.targetTouches.length > 1)
+                    return
+                //获取当前指针点击的位置
+                var touch = e.targetTouches[0]
+                if(lastTouch){
+                    //旋转画卷
+                    for(let i = panos.length - 1;i>=0;i--){
+                        panos[i].TouchTotate(touch,lastTouch);
+                    }
+                    if(returnToOrigin){
+                        clearTimeout(returnToOrigin)
+                        // console.log("清空恢复Z轴");
+                    }
+                    returnToOrigin = setTimeout(() => {
+                        // console.log("开始恢复Z轴");
+                        for(let i = 0 ;i<panos.length;i++){
+                            panos[i].ReturnOrigin(i==1?-50:0)
+                        }
+                    }, 300);
+                    
+                }
+                count = 0   
+                lastTouch = touch
+            })
+    
+
+            function Jump(obj){
+                obj.flag = 1;
+                obj.count = 0;
+                obj.jump = setInterval(function(){
+                        obj.count+=obj.flag
+                        obj.scale(1+obj.count/100).updateT()
+                        // obj.filter({brightness:1+obj.count/100}).updateF()
+                        if(obj.count <= 0)
+                            obj.flag = 1
+                        if(obj.count>=100)
+                            obj.flag = -1
+                    },1000/60)
+                }
+                
+                
+
+        stageStart();
+
+    </script>
+</body>
+
+</html>

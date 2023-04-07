@@ -1,0 +1,138 @@
+.rand-wipe {
+    /* height: 100vh; */
+    width: 100vw;
+    /* background-color: aqua; */
+    position: absolute;
+    top: 150px;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    transform: scale(0.9);
+}
+
+.rand-wipe .choice-div {
+    flex: 1;
+    /* height: 60vh; */
+    /* width: 23vw; */
+    background-color: antiquewhite;
+}
+
+.rand-wipe .choice-div img {
+    display: block;
+    position: absolute;
+}
+
+.rand-wipe .choice-div img:nth-child(2) {
+    transform: rotateY(90deg);
+}
+
+.tran {
+    animation: tran 0.7s ease-in forwards;
+}
+
+@keyframes tran {
+    0% {
+        transform: rotateY(0deg);
+    }
+
+    100% {
+        transform: rotateY(90deg);
+    }
+}
+
+.tran2 {
+    animation: tran2 0.7s ease-out forwards;
+}
+
+@keyframes tran2 {
+    0% {
+        transform: rotateY(90deg);
+    }
+
+    100% {
+        transform: rotateY(0deg);
+    }
+}
+
+.ind {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.ind>div {
+    display: flex;
+    justify-content: space-around;
+    width: 90vw;
+}
+
+.ind>div .right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center;  */
+    position: relative;
+}
+
+.ind .show .left img {
+    height: 70vh;
+}
+
+.ind div img {
+    display: block;
+}
+
+.img2 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 10px;
+}
+
+.black{
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.491);
+    top: 0;
+    z-index: 10;
+}
+
+.image-c{
+    height: 90vh;
+    width: 90vw;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* background-color: antiquewhite; */
+}
+
+.image-c .down{
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    top: -15px;
+    right: -15px;
+    color:aquamarine;
+    line-height: 30px;
+    text-align: center;
+    background: white;
+    border-radius: 50%;
+    font-size: 19px;
+}
+
+#shot{
+    height: 100%;
+    width: 100%;
+}

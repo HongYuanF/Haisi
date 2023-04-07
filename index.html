@@ -1,0 +1,465 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html lang="en" class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<head>
+	<!-- <meta name="viewport" content="width=device-width, user-scalable = no" /> -->
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,viewport-fit=cover">
+
+
+	<script type="text/javascript" src="js/jquery.min.1.7.js"></script>
+	<script type="text/javascript" src="js/modernizr.2.5.3.min.js"></script>
+	<style>
+		.first-bg {
+			background: url("./cartoon/first-bg.png") no-repeat 100% 100%;
+			background-position: center;
+			/* background: #d7e8f8 no-repeat 100% 100%; */
+
+			height: 100vh;
+			width: 100vw;
+			/* margin:0%;s */
+			background-size: contain;
+			z-index: -1;
+		}
+
+		.start-btn {
+			position: absolute;
+			z-index: 2;
+			height: 20vh;
+			width: 20vw;
+			left: 39%;
+			top: 62%;
+			background: url("images/start-btn.png") no-repeat;
+			background-size: contain;
+			animation: shine 2.5s linear alternate infinite;
+			filter: brightness(1.2);
+		}
+
+		@keyframes shine {
+			100% {
+				filter: brightness(0.2);
+			}
+		}
+
+		.first-title {
+			top: 15%;
+			background: url("images/first-title.png") no-repeat;
+			background-size: contain;
+			background-position: center;
+			position: absolute;
+			z-index: 2;
+			height: 60vh;
+			width: 100%;
+		}
+
+		.story-text {
+			height: 100%;
+			width: 100%;
+			/* left: -10%; */
+			background-repeat: no-repeat;
+			background-image: url("images/story_1.png");
+			background-size: 100% 100%;
+			background-position: center;
+			z-index: 13;
+			position: absolute;
+			transition: opacity 1s ease;
+			visibility: hidden;
+		}
+
+		.flipbook{
+			transition:margin 0.5s ease;
+		}
+		.music-controller{
+			position: absolute;
+			right: 0.5%;
+			top: 0%;
+			width: 10%;
+			height: 15%;
+			z-index: 10;
+			/* background-color: red; */
+			background-image: url(./images/music-button.png);
+			background-size: contain;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		.notice{
+			position: absolute;
+			right: 0.5%;
+			bottom: 0.5%;
+			width: 10%;
+			height: 12%;
+			z-index: 10;
+			/* background-color: wheat; */
+			background: url(./images/slide.png) no-repeat center;
+			background-size: contain;
+
+			/* border-radius: 80%; */
+			visibility: hidden;
+		}
+	</style>
+</head>
+<body>
+	<audio class="talk" playbackRate="2" src=""></audio>
+	<audio class="bg-music"  volume=0.2 src="./video/gd.m4a" loop ></audio>
+	<div class="notice"></div>
+	<div class="music-controller"></div>
+	<div class="first-bg">
+		<!-- <div class="first-title"></div> -->
+		<div class="start-btn"></div>
+		<div class="story-text"></div>
+		<div class="xiushi"></div>
+		<div class="xiushi"></div>
+		
+	</div>
+	<div class="flipbook-viewport">
+		<div class="container">
+			<div class="flipbook">
+				<div class="page" style="background-image:url(./cartoon/Face.JPG)"></div>
+				<div class="double" style="background-image:url(./cartoon/NIMG_1.JPG)"></div>
+				<div class="double" style="background-image:url(./cartoon/NIMG_2.JPG)"></div>
+				<div class="double" style="background-image:url(./cartoon/NIMG_3.JPG)"></div>
+				<div class="double" style="background-image:url(./cartoon/NIMG_4.JPG)"></div>
+				<div class="double" style="background-image:url(./cartoon/NIMG_5.JPG)"></div>
+				<div class="page" style="background-image:url(./cartoon/Back.jpg)"></div>
+			</div>
+		</div>
+	</div>
+
+	<link rel="stylesheet" href="./css/rand.css">
+	<div class="rand-wipe" style="display: none;">
+		<div class="choice-div" id="1">
+			<img src="./rand-images/source1.png" alt="">
+			<img src="./rand-images/card1.png" alt="">
+		</div>
+		<div class="choice-div" id="2">
+			<img src="./rand-images/source1.png" alt="">
+			<img src="./rand-images/card2.png" alt="">
+		</div>
+		<div class="choice-div" id="3">
+			<img src="./rand-images/source1.png" alt="">
+			<img src="./rand-images/card3.png" alt="">
+		</div>
+		<div class="choice-div" id="4">
+			<img src="./rand-images/source1.png" alt="">
+			<img src="./rand-images/card4.png" alt="">
+		</div>
+	</div>
+	<div class="ind" style="display: none;">
+		<div class="show" id="show1" style="display: none;">
+			<div class="left"><img src="./rand-images/award1.png" alt=""></div>
+			<div class="right">
+				<img src="./rand-images/text1.png" alt="">
+				<img class="img2" src="./rand-images/fenxiang.png" alt="">
+			</div>
+		</div>
+		<div class="show" id="show2" style="display: none;">
+			<div class="left"><img src="./rand-images/award2.png" alt=""></div>
+			<div class="right">
+				<img src="./rand-images/text2.png" alt="">
+				<img class="img2" src="./rand-images/fenxiang.png" alt="">
+			</div>
+		</div>
+		<div class="show" id="show3" style="display: none;">
+			<div class="left"><img src="./rand-images/award3.png" alt=""></div>
+			<div class="right">
+				<img src="./rand-images/text3.png" alt="">
+				<img class="img2" src="./rand-images/fenxiang.png" alt="">
+			</div>
+		</div>
+		<div class="show" id="show4" style="display: none;">
+			<div class="left"><img src="./rand-images/award4.png" alt=""></div>
+			<div class="right">
+				<img src="./rand-images/text4.png" alt="">
+				<img class="img2" src="./rand-images/fenxiang.png" alt="">
+			</div>
+		</div>
+	</div>
+	<div class="black" style="display: none;">
+		<div class="image-c">
+			<img id="shot" src="" alt="">
+			<div class="down">x</div>
+		</div>
+
+	</div>
+
+	<script src="./js/html2canvas.js"></script>
+	<script>
+		$('.music-controller').on("click",function(){
+			console.log($(this)[0].isPlay);
+			if(typeof $(this)[0].isPlay == 'undefined'){
+				$(this)[0].isPlay = true;
+			}
+			$(this)[0].isPlay = !$(this)[0].isPlay
+			if($(this)[0].isPlay){
+				document.getElementsByClassName("bg-music")[0].volume = 0.2;
+			}else{
+				document.getElementsByClassName("bg-music")[0].volume = 0;
+
+			}
+		})
+		document.getElementsByClassName("bg-music")[0].volume = 0.2;
+		document.getElementsByClassName("bg-music")[0].play();
+		$('.choice-div').on('click', function (ele) {
+			// const id = ele.currentTarget.id;
+			$(this).children('img').eq(0).addClass('tran')
+			setTimeout(() => {
+				$(this).children('img').eq(1).addClass('tran2')
+				setTimeout(() => {
+					$('.rand-wipe').fadeOut()
+					$('.ind').children('.show').eq($(this).index()).show()
+					$('.ind').fadeIn()
+				}, 900)
+			}, 700)
+
+			// console.log(ele);
+		})
+
+		$('.img2').on('click', () => {
+			html2canvas($("body"), {
+				onrendered: function (canvas) {
+					var url = canvas.toDataURL("image/png");
+					$('.black').fadeIn()
+					$('#shot').prop('src', url)
+					console.log($('#shot').prop('src'));
+				}
+			});
+		})
+
+		$('.down').on('click', () => {
+			$('.black').fadeOut()
+		})
+	</script>
+
+
+	<script type="text/javascript">
+
+		var story_page = 0;
+		var story = [{ url: "images/story_1.png", isContinue: true },
+		{ url: "images/story_2.png", isContinue: false },
+		{ url: "images/story_3.png", isContinue: false },
+		{ url: "images/story_4.png", isContinue: false },
+		{ url: "images/story_5.png", isContinue: false },
+		{ url: "images/story_6.png", isContinue: true },
+		{ url: "images/story_7.png", isContinue: true },
+		{ url: "images/story_8.png", isContinue: true },
+		{ url: "images/story_9.png", isContinue: false },
+		{ url: "images/story_10.png", isContinue: false },
+		{ url: "images/story_11.png", isContinue: true },
+		{ url: "images/story_12.png", isContinue: true },
+		{ url: "images/story_13.png", isContinue: false },
+		]
+		$('.story-text').on("click", turnStory)
+
+		function turnStory(e) {
+			$(this).css({ opacity: "0%" })
+			if (story_page == 1) {
+				console.log("显示漫画");
+				console.log($('.notice'));
+				$('.notice').css({"visibility":"visible"})
+				$('.container').css({ visibility: '' });
+
+			}
+			$('.story-text').off("click");
+			if (story[story_page].isContinue) {
+				setTimeout(() => {
+					console.log(`url(${story[story_page].url})`);
+					// $('.story-text').css("transition-duration","0s")
+					$(this).css("background-image", `url(${story[story_page].url})`)
+					console.log(story_page);
+					$('.talk').prop('src',`./video/${story_page+1}.mp3`)
+					$('.talk')[0].play()
+					$(this).css({ opacity: "1" })
+					$('.story-text').css("transition-duration", "1s")
+					setTimeout(() => {
+						$('.story-text').on("click", turnStory)
+					}, 1000);
+				}, 1000);
+
+				story_page++;
+
+				return;
+			}
+			story_page++;
+			if (story_page === 13) {
+				$('.talk')[0].pause()
+
+				setTimeout(() => {
+					$('.rand-wipe').fadeIn()
+					$('.bg-music').prop('src',"./video/final-bgm.mp3")
+				}, 500)
+			}
+			setTimeout(() => {
+				$(this).css("visibility", "hidden")
+			}, 1000);
+
+		}
+
+		$('.start-btn').click(function () {
+			$('.talk').prop('src','./video/1.mp3')
+			$('.talk')[0].play()
+			$('.first-bg').css("background","#d7e8f8 no-repeat 100% 100%")
+			$('.start-btn').remove();
+			$('.first-title').remove();
+			$(".story-text").css("transition-duration", "0s");
+			$(".story-text").css("visibility", "visible");
+			$(".story-text").css("transition-duration", "1s");
+			document.getElementsByClassName("bg-music")[0].play();
+
+			loadApp();
+		})
+
+
+		function loadApp() {
+
+			var flipbook = $('.flipbook');
+
+			var w = $(window).width();
+			var h = $(window).height();
+			$('.flipboox').width(w).height(h);
+			$(window).resize(function () {
+				w = $(window).width();
+				h = $(window).height();
+				$('.flipboox').width(w).height(h);
+			});
+
+			// Check if the CSS was already loaded
+
+			if (flipbook.width() == 0 || flipbook.height() == 0) {
+				setTimeout(loadApp, 10);
+				return;
+			}
+			$('.flipbook .double').scissor();
+
+			// Create the flipbook
+			let heightOffset = 0.75
+			let widthOffset = (h / w) * heightOffset * 2
+
+			console.log(widthOffset);
+			console.log(heightOffset);
+
+
+			$('.container').css({
+				left: (1 - widthOffset) * 50 + '%',
+				top: (1 - heightOffset) * 50 + '%'
+			})
+
+			console.log(`${(50 - (1 - widthOffset) * 50)}vw`);
+			$('.page').css({ width: `${(50 - (1 - widthOffset) * 50)}vw` })
+			let pageWidth = $('.page').width()
+			console.log(pageWidth);
+
+
+
+			$('.flipbook').turn({
+
+				height: h * heightOffset,
+
+				width: w * widthOffset,
+				// Elevation
+
+				elevation: 50,
+
+				// Enable gradients
+
+				gradients: true,
+
+				// Auto center this flipbook
+
+				autoCenter: true,
+
+				acceleration: true,
+
+				when: {
+					start: function (e, page, view) {
+						$('.odd').children().css({ marginLeft: -pageWidth + 'px' })
+					},
+					turned: function (e, page) {
+						console.log(e);
+						if (page == 1)
+							return;
+						if (page == 12) {
+							$('.container').remove();
+						}
+						
+						console.log(page);
+						// $('.story-text').css("transition-duration","0s")
+						console.log(`url(${story[story_page].url})`);
+						$('.story-text').css({
+							"background-image": `url(${story[story_page].url})`,
+							"visibility": "visible",
+							"opacity": "1"
+						})
+						if(page != 8){
+							$('.talk').prop('src',`./video/${story_page+1}.mp3`)
+							$('.talk')[0].play()
+						}
+						// $('.story-text').css("transition-duration","1s")
+						setTimeout(() => {
+							$('.story-text').on("click", turnStory)
+						}, 1000);
+					},
+					turning: function (e, page) {
+						console.log(page);
+						if (page == 8) {
+							$('.talk')[0].pause();
+							$('.bg-music')[0].pause();
+
+							console.log("进入");
+							let frame = $(`<iframe src="./huajuan.html" style="opacity:0;height: 100vh;width:100vw;position: absolute;top: 0;z-index: 100;"></iframe>`)
+							frame.css("transition","opacity 1s ease");
+							frame.css("opacity",1);
+							$('body').append(frame)
+							// $('iframe').fadeIn();
+							// $('iframe').css('opacity',1)
+							
+						}
+					},
+					// end:function(){
+					// 	console.log();
+					// }
+				}
+
+
+			});
+			$('.odd').children().css({ marginLeft: -pageWidth + 'px' })
+
+		}
+
+		// Load the HTML4 version if there's not CSS transform
+
+		$('.container').css({ visibility: 'hidden' });
+
+		yepnope({
+			test: Modernizr.csstransforms,
+			yep: ['js/turn.js'],
+			nope: ['js/turn.html4.min.js'],
+			both: ['js/scissor.min.js', 'css/double-page.css'],
+
+		});
+
+	</script>
+
+	<script>
+		window.del = function(){
+			$('iframe').fadeOut()
+			setTimeout(() => {
+				$('.bg-music')[0].play();
+				$('iframe').remove();
+			}, 500);
+		}
+		window.stopTalk = function(){
+			$('.talk').prop('src',`./video/${6}.mp3`)
+			$('.talk')[0].play()
+		}
+	</script>
+	
+
+</body>
+
+</html>
